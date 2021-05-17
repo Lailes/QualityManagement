@@ -1,0 +1,56 @@
+﻿@model ParseModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="script" href="/lib/jquery/dist/jquery.js">
+    <script type="text/javascript" >
+        
+        function cancel(display, input) {
+          document.getElementById(display).value = '';
+          document.getElementById(input).value = '';
+        }
+        function textChanged(input, buttonSubmit) {
+          input = document.getElementById(input);
+          let treeLine = input.value;
+          let regex = /[ ]*([0-9])+([ ][0-9]+)*[ ]*/;
+          document.getElementById(buttonSubmit).disabled=treeLine.match(regex)[0]!==treeLine;
+        }
+        
+        window.addEventListener('load', function() {
+          textChanged('input', 'SubmitButton');
+        })
+        
+    </script>
+</head>
+<body>
+<div>
+    <div>
+        <form method="post" class="text-center" style="padding: 5px">
+            <input asp-for="TreeRequest" id="input" oninput="textChanged('input', 'SubmitButton')" style="width: 70%" />
+            <select id="select" asp-for="IsBalance">
+                <option value="true">Show Balance</option>
+                <option value="false">Show Source</option>
+            </select>
+            <button id="SubmitButton" disabled="disabled" type="submit" class="btn btn-primary">Submit</button>
+            <button id="cancelButton" type="button" onclick="cancel('display', 'input')" class="btn btn-secondary" >Cancel</button>
+            <br/>
+            <br/>
+            <textarea id="display" rows="30" cols="100">
+                @if (Model?.TreeResultJson != null && Model.TreeResultJson != ""){
+                    @Model.TreeResultJson
+                }
+            </textarea>
+        </form>
+    </div>
+</div>
+</body>
+</html>
